@@ -1,6 +1,8 @@
-import { IMMICH_ALBUM_ID } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import { immichClient } from "$lib/api";
 import type { PageServerLoad } from "./$types";
+
+const IMMICH_ALBUM_ID = env.IMMICH_ALBUM_ID;
 
 export const load: PageServerLoad = async () => {
   if (!IMMICH_ALBUM_ID) {

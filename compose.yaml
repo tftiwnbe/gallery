@@ -1,0 +1,13 @@
+services:
+  gallery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gallery
+    ports:
+      - 3000:3000
+    environment:
+      - IMMICH_URL=http://localhost:2283
+      - IMMICH_API_KEY=
+      - IMMICH_ALBUM_ID=
+    restart: unless-stopped

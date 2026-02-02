@@ -1,4 +1,7 @@
-import { IMMICH_URL, IMMICH_API_KEY } from "$env/static/private";
+import { env } from "$env/dynamic/private";
+
+const IMMICH_URL = env.IMMICH_URL ?? "";
+const IMMICH_API_KEY = env.IMMICH_API_KEY ?? "";
 
 interface ImmichAsset {
   id: string;
