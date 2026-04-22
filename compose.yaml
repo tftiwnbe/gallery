@@ -7,7 +7,17 @@ services:
     ports:
       - 3000:3000
     environment:
-      - IMMICH_URL=http://localhost:2283
+      # Use host.docker.internal to reach services on the host machine.
+      # On Linux this requires the extra_hosts entry below.
+      - IMMICH_URL=http://host.docker.internal:2283
       - IMMICH_API_KEY=
       - IMMICH_ALBUM_ID=
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
     restart: unless-stopped

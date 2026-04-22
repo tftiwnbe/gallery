@@ -1,7 +1,14 @@
 import { env } from "$env/dynamic/private";
 
-const IMMICH_URL = env.IMMICH_URL ?? "";
-const IMMICH_API_KEY = env.IMMICH_API_KEY ?? "";
+const IMMICH_URL = env.IMMICH_URL?.trim() ?? "";
+const IMMICH_API_KEY = env.IMMICH_API_KEY?.trim() ?? "";
+
+if (!IMMICH_URL) {
+  console.warn("IMMICH_URL is not set — Immich API calls will fail");
+}
+if (!IMMICH_API_KEY) {
+  console.warn("IMMICH_API_KEY is not set — Immich API calls will fail");
+}
 
 interface ImmichAsset {
   id: string;
@@ -27,10 +34,7 @@ class ImmichClient {
     this.apiKey = apiKey;
   }
 
-  private async request<T>(
-    endpoint: string,
-    options?: RequestInit,
-  ): Promise<T> {
+  private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       ...options,
       headers: {
@@ -41,9 +45,7 @@ class ImmichClient {
     });
 
     if (!response.ok) {
-      throw new Error(
-        `Immich API error: ${response.status} ${response.statusText}`,
-      );
+      throw new Error(`Immich API error: ${response.status} ${response.statusText}`);
     }
 
     return response.json();
@@ -57,14 +59,11 @@ class ImmichClient {
     assetId: string,
     size: "preview" | "thumbnail" = "preview",
   ): Promise<Response> {
-    return fetch(
-      `${this.baseUrl}/api/assets/${assetId}/thumbnail?size=${size}`,
-      {
-        headers: {
-          "x-api-key": this.apiKey,
-        },
+    return fetch(`${this.baseUrl}/api/assets/${assetId}/thumbnail?size=${size}`, {
+      headers: {
+        "x-api-key": this.apiKey,
       },
-    );
+    });
   }
 }
 
